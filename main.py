@@ -1,12 +1,21 @@
-from material import Material
+from filtro import Filtro
+from base_datos_materiales import BaseDatosMateriales
 
-acero = Material(
-    "Acero Inoxidable 304",
-    540,
-    7.9,
-    3.5,
-    870
+
+bd = BaseDatosMateriales()
+bd.cargar_materiales()
+
+materiales = bd.obtener_todos()
+
+filtro = Filtro(
+    300,
+    8.0,
+    10.0,
+    200
 )
 
-acero.mostrar_info()
-print(acero)
+for material in materiales:
+    if material.cumple_filtro(filtro):
+        print("CUMPLE:")
+        material.mostrar_info()
+        print("---------------------")

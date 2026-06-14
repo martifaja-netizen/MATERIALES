@@ -16,3 +16,12 @@ class Material:
 
     def __str__(self):
         return self.nombre
+    
+    
+    def cumple_filtro(self, filtro):
+        return (
+        self.resistencia >= filtro.res_min
+        and self.densidad <= filtro.dens_max
+        and self.coste <= filtro.coste_max
+        and self.temp_max >= filtro.temp_min
+        )
