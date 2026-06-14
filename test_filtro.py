@@ -6,7 +6,7 @@ from filtro import Filtro
 
 class TestFiltro(unittest.TestCase):
     """
-    Esta clase contiene las pruebas unitarias para validar
+    Esta clase contiene las pruebas  para validar
     que el objeto Filtro guarda y mantiene los datos correctamente.
     """
 
