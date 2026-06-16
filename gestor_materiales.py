@@ -20,6 +20,9 @@ class GestorMateriales:
         """
         # Usamos 'self.' para guardar la conexión con la base de datos
         self.bd = BaseDatosMateriales()
+        #añado esto: 
+        self.bd.cargar_materiales()
+
 
     def buscar(self, filtro: Filtro) -> list:
         """
