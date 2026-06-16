@@ -1,4 +1,15 @@
+# Archivo: interfaz_usuario.py
+
+"""
+Clase InterfazUsuario.
+
+Implementa la interfaz gráfica de la aplicación mediante Tkinter.
+Permite introducir criterios de búsqueda, crear un objeto Filtro,
+consultar el GestorMateriales y mostrar los resultados en una tabla.
+"""
+
 import tkinter as tk
+from tkinter import ttk
 
 from gestor_materiales import GestorMateriales
 from filtro import Filtro
@@ -10,7 +21,7 @@ class InterfazUsuario:
 
         self.ventana = tk.Tk()
         self.ventana.title("Selector de Materiales")
-        self.ventana.geometry("800x600")
+        self.ventana.geometry("900x600")
 
         self.gestor = GestorMateriales()
 
@@ -37,8 +48,22 @@ class InterfazUsuario:
         )
         self.boton_buscar.pack(pady=20)
 
-        self.texto_resultados = tk.Text(self.ventana, height=10, width=60)
-        self.texto_resultados.pack()
+        columnas = ("material", "resistencia", "densidad", "coste", "temp_max")
+
+        self.tabla_resultados = ttk.Treeview(
+            self.ventana,
+            columns=columnas,
+            show="headings",
+            height=8
+        )
+
+        self.tabla_resultados.heading("material", text="Material")
+        self.tabla_resultados.heading("resistencia", text="Resistencia (MPa)")
+        self.tabla_resultados.heading("densidad", text="Densidad (g/cm³)")
+        self.tabla_resultados.heading("coste", text="Coste (€/kg)")
+        self.tabla_resultados.heading("temp_max", text="Temp. Máx. (°C)")
+
+        self.tabla_resultados.pack(pady=10)
 
     def ejecutar(self):
         self.ventana.mainloop()
@@ -54,7 +79,18 @@ class InterfazUsuario:
 
         resultados = self.gestor.buscar(filtro)
 
-        self.texto_resultados.delete("1.0", tk.END)
+        for fila in self.tabla_resultados.get_children():
+            self.tabla_resultados.delete(fila)
 
         for material in resultados:
-            self.texto_resultados.insert(tk.END, str(material) + "\n")
+            self.tabla_resultados.insert(
+                "",
+                tk.END,
+                values=(
+                    material.nombre,
+                    material.resistencia,
+                    material.densidad,
+                    material.coste,
+                    material.temp_max
+                )
+            )

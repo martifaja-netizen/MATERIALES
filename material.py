@@ -1,3 +1,20 @@
+"""
+Clase Material.
+
+Representa un material individual del catálogo.
+
+Cada objeto Material almacena las propiedades necesarias
+para realizar búsquedas y comparaciones dentro de la aplicación:
+
+- nombre
+- resistencia mecánica
+- densidad
+- coste
+- temperatura máxima de trabajo
+
+Además, proporciona métodos para mostrar la información
+del material y comprobar si cumple un determinado filtro.
+"""
 class Material:
 
     def __init__(self, nombre, resistencia, densidad, coste, temp_max):

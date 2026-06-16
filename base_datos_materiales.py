@@ -1,8 +1,27 @@
+"""
+Clase BaseDatosMateriales.
+
+Actúa como almacén de todos los materiales disponibles
+en la aplicación.
+
+Su función es crear y mantener una colección de objetos
+Material que posteriormente podrán ser consultados y
+filtrados por el GestorMateriales.
+
+Actualmente los materiales se cargan desde una lista
+definida en el código, aunque en futuras versiones
+podrían obtenerse desde un archivo o una base de datos.
+"""
 from material import Material
 
 
 class BaseDatosMateriales:
+    """
+    Contenedor principal de los materiales disponibles.
 
+    Mantiene una lista de objetos Material y proporciona
+    métodos para cargarlos, consultarlos y filtrarlos.
+    """
     def __init__(self):
         self.materiales = []
 
