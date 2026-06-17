@@ -80,11 +80,16 @@ class InterfazUsuario:
             height=8
         )
 
-        self.tabla_resultados.heading("material", text="Material")
-        self.tabla_resultados.heading("resistencia", text="Resistencia (MPa)")
-        self.tabla_resultados.heading("densidad", text="Densidad (g/cm³)")
-        self.tabla_resultados.heading("coste", text="Coste (€/kg)")
-        self.tabla_resultados.heading("temp_max", text="Temp. Máx. (°C)")
+        self.tabla_resultados.heading("material", text="Material",
+                                      command=lambda: self.ordenar_columna("material", True))
+        self.tabla_resultados.heading("resistencia", text="Resistencia (MPa)",
+                                      command=lambda: self.ordenar_columna("resistencia", True))
+        self.tabla_resultados.heading("densidad", text="Densidad (g/cm³)",
+                                      command=lambda: self.ordenar_columna("densidad", True))
+        self.tabla_resultados.heading("coste", text="Coste (€/kg)",
+                                      command=lambda: self.ordenar_columna("coste", True))
+        self.tabla_resultados.heading("temp_max", text="Temp. Máx. (°C)",
+                                      command=lambda: self.ordenar_columna("temp_max", True))
 
         self.tabla_resultados.column("material", width=220)
         self.tabla_resultados.column("resistencia", width=140, anchor="center")
@@ -134,3 +139,26 @@ class InterfazUsuario:
             return valor_por_defecto
 
         return float(texto)
+
+    def ordenar_columna(self, columna, reverse):
+
+        # 1. Extraemos todas las filas actuales de la tabla
+        filas = []
+        for k in self.tabla_resultados.get_children(""):
+            val = self.tabla_resultados.set(k, columna)
+
+            # Si la columna es numérica, convertimos el texto a float para ordenar bien matemáticamente
+            if columna != "material":
+                val = float(val)
+
+            filas.append((val, k))
+
+        # 2. Ordenamos la lista
+        filas.sort(reverse=reverse)
+
+        # 3. Reorganizamos las filas visualmente en la tabla según el nuevo orden
+        for index, (val, k) in enumerate(filas):
+            self.tabla_resultados.move(k, "", index)
+
+        # 4.Hacemos que si vuelve a clickar la MISMA columna, ahora se ordene al revés
+        self.tabla_resultados.heading(columna, command=lambda: self.ordenar_columna(columna, not reverse))
