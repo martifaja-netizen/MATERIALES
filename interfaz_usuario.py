@@ -94,6 +94,9 @@ class InterfazUsuario:
 
         self.tabla_resultados.pack(fill="x")
 
+        self.buscar_materiales()
+
+
     def ejecutar(self):
         self.ventana.mainloop()
 
