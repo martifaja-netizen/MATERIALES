@@ -94,7 +94,7 @@ class InterfazUsuario:
 
         self.tabla_resultados.pack(fill="x")
 
-        self.buscar_materiales()
+        self.buscar_materiales() #linea extra para ver todos los materiales
 
 
     def ejecutar(self):
