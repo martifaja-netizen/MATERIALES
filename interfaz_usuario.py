@@ -24,20 +24,42 @@ class InterfazUsuario:
 
         self.gestor = GestorMateriales()
 
-        titulo = tk.Label(
-            self.ventana,
-            text="SELECTOR DE MATERIALES - INGENIERÍA MECÁNICA",
-            font=("Arial", 16, "bold")
-        )
-        titulo.pack(pady=15)
+    #colores de la interfaz
+        COLOR_FONDO = "#eef0f4"
+        COLOR_AZUL = "#2f67b1"
+        COLOR_BLANCO = "#ffffff"
+        COLOR_TEXTO = "#2f3747"
 
+        self.ventana.configure(bg=COLOR_FONDO)
+
+    #titulo y encabezado de la interfaz
+        header = tk.Frame(
+            self.ventana,
+            bg=COLOR_AZUL,
+            height=80
+        )
+        header.pack(fill="x")
+
+        titulo = tk.Label(
+            header,
+            text="SELECTOR DE MATERIALES - INGENIERÍA MECÁNICA",
+            bg=COLOR_AZUL,
+            fg="white",
+            font=("Arial", 18, "bold")
+        )
+        titulo.pack(pady=22)
+
+        #label frame para los filtros de busqueda
         frame_filtros = tk.LabelFrame(
             self.ventana,
             text="Criterios de selección",
-            padx=20,
-            pady=15
+            bg=COLOR_BLANCO,
+            fg=COLOR_TEXTO,
+            font=("Arial", 11, "bold"),
+            padx=30,
+            pady=20
         )
-        frame_filtros.pack(pady=10)
+        frame_filtros.pack(pady=25)
 
         tk.Label(frame_filtros, text="Resistencia mínima (MPa):").grid(row=0, column=0, padx=10, pady=5)
         self.entry_res = tk.Entry(frame_filtros, width=20)
@@ -55,38 +77,91 @@ class InterfazUsuario:
         self.entry_temp = tk.Entry(frame_filtros, width=20)
         self.entry_temp.grid(row=3, column=1, padx=10, pady=5)
 
+        #botones de busqueda y limpiar campos
         self.boton_buscar = tk.Button(
             self.ventana,
             text="BUSCAR",
-            width=20,
+            width=25,
+            bg=COLOR_AZUL,
+            fg="white",
+            font=("Arial", 11, "bold"),
             command=self.buscar_materiales
         )
-        self.boton_buscar.pack(pady=15)
+        self.boton_buscar.pack(pady=10)
 
         self.boton_limpiar = tk.Button(
             self.ventana,
             text="LIMPIAR CAMPOS",
-            width=20,
+            width=25,
+            bg=COLOR_AZUL,
+            fg="white",
+            font=("Arial", 10, "bold"),
             command=self.limpiar_campos
         )
         self.boton_limpiar.pack(pady=5)
-
+    # resultados de la busqueda en una tabla
         frame_resultados = tk.LabelFrame(
             self.ventana,
             text="Resultados",
+            bg=COLOR_BLANCO,
+            fg=COLOR_TEXTO,
+            font=("Arial", 11, "bold"),
             padx=10,
             pady=10
         )
-        frame_resultados.pack(pady=10, fill="x", padx=30)
+        frame_resultados.pack(pady=20, fill="x", padx=40)
 
         columnas = ("material", "resistencia", "densidad", "coste", "temp_max")
+
+
+        estilo = ttk.Style()
+        estilo.theme_use("default")
+
+        estilo.configure(
+            "Treeview",
+            background="white",
+            foreground="#2f3747",
+            rowheight=28,
+            fieldbackground="white",
+            font=("Arial", 10),
+            bordercolor="#d0d0d0",
+            borderwidth=1,
+            relief="solid"
+        )
+
+        estilo.configure(
+            "Treeview.Heading",
+            background=COLOR_AZUL,
+            foreground="white",
+            font=("Arial", 10, "bold")
+        )
+
+        estilo.map(
+            "Treeview.Heading",
+            background=[("active", COLOR_AZUL)]
+        )
+
+
 
         self.tabla_resultados = ttk.Treeview(
             frame_resultados,
             columns=columnas,
             show="headings",
-            height=8
+            height=10
         )
+
+
+        self.tabla_resultados.tag_configure(
+            "fila_par",
+            background="#ffffff"
+        )
+
+        self.tabla_resultados.tag_configure(
+            "fila_impar",
+            background="#f2f2f2"
+        )
+
+
 
         self.tabla_resultados.heading("material", text="Material",
                                       command=lambda: self.ordenar_columna("material", True))
@@ -99,11 +174,11 @@ class InterfazUsuario:
         self.tabla_resultados.heading("temp_max", text="Temp. Máx. (°C)",
                                       command=lambda: self.ordenar_columna("temp_max", True))
 
-        self.tabla_resultados.column("material", width=220)
-        self.tabla_resultados.column("resistencia", width=140, anchor="center")
-        self.tabla_resultados.column("densidad", width=140, anchor="center")
-        self.tabla_resultados.column("coste", width=120, anchor="center")
-        self.tabla_resultados.column("temp_max", width=140, anchor="center")
+        self.tabla_resultados.column("material", width=260, anchor="w")
+        self.tabla_resultados.column("resistencia", width=150, anchor="center")
+        self.tabla_resultados.column("densidad", width=150, anchor="center")
+        self.tabla_resultados.column("coste", width=130, anchor="center")
+        self.tabla_resultados.column("temp_max", width=150, anchor="center")
 
         self.tabla_resultados.pack(fill="x")
 
@@ -143,7 +218,10 @@ class InterfazUsuario:
             )
             return
 
-        for material in resultados:
+        for i, material in enumerate(resultados):
+
+            etiqueta_fila = "fila_par" if i % 2 == 0 else "fila_impar"
+
             self.tabla_resultados.insert(
                 "",
                 tk.END,
@@ -153,8 +231,11 @@ class InterfazUsuario:
                     material.densidad,
                     material.coste,
                     material.temp_max
-                )
+                ),
+                tags=(etiqueta_fila,)
             )
+
+            
     def obtener_valor(self, entrada, valor_por_defecto):
         texto = entrada.get()
 
