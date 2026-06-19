@@ -9,7 +9,7 @@ consultar el GestorMateriales y mostrar los resultados en una tabla.
 """
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from gestor_materiales import GestorMateriales
 from filtro import Filtro
@@ -108,17 +108,32 @@ class InterfazUsuario:
 #añadida la opcion de buscar con el campo vacio
     def buscar_materiales(self):
 
-        filtro = Filtro(
-            self.obtener_valor(self.entry_res, 0),
-            self.obtener_valor(self.entry_dens, 999999),
-            self.obtener_valor(self.entry_coste, 999999),
-            self.obtener_valor(self.entry_temp, 0)
-        )
+        try:
+            filtro = Filtro(
+                self.obtener_valor(self.entry_res, 0),
+                self.obtener_valor(self.entry_dens, 999999),
+                self.obtener_valor(self.entry_coste, 999999),
+                self.obtener_valor(self.entry_temp, 0)
+            )
+
+        except ValueError:
+            messagebox.showerror(
+                "Error de entrada",
+                "Introduce solo valores numéricos en los campos."
+            )
+            return
 
         resultados = self.gestor.buscar(filtro)
 
         for fila in self.tabla_resultados.get_children():
             self.tabla_resultados.delete(fila)
+
+        if len(resultados) == 0:
+            messagebox.showinfo(
+                "Sin resultados",
+                "No se han encontrado materiales que cumplan los criterios."
+            )
+            return
 
         for material in resultados:
             self.tabla_resultados.insert(
