@@ -63,6 +63,14 @@ class InterfazUsuario:
         )
         self.boton_buscar.pack(pady=15)
 
+        self.boton_limpiar = tk.Button(
+            self.ventana,
+            text="LIMPIAR CAMPOS",
+            width=20,
+            command=self.limpiar_campos
+        )
+        self.boton_limpiar.pack(pady=5)
+
         frame_resultados = tk.LabelFrame(
             self.ventana,
             text="Resultados",
@@ -177,3 +185,11 @@ class InterfazUsuario:
 
         # 4.Hacemos que si vuelve a clickar la MISMA columna, ahora se ordene al revés
         self.tabla_resultados.heading(columna, command=lambda: self.ordenar_columna(columna, not reverse))
+
+    def limpiar_campos(self):
+        self.entry_res.delete(0, tk.END)
+        self.entry_dens.delete(0, tk.END)
+        self.entry_coste.delete(0, tk.END)
+        self.entry_temp.delete(0, tk.END)
+
+        self.buscar_materiales()
